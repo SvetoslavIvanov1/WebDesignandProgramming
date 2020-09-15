@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Index</title>
+    <link rel="stylesheet" type="text/css" href="index.css">
+</head>
+<body>
+<<ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="Credits.html">Credits</a></li>
+    <li><a href="orderRecordsForm.php">Order Records</a></li>
+    <li><a href="Records.php">Records</a></li>
+    <li><a href="Logout.php">Logout</a></li>
+</ul>
+<header>
+    <h1>Index</h1>
+</header>
+<main>
+    <form method="post" action="Login.php">
+        Username <input type="text" name="username" />
+        Password <input type="password" name="password" />
+        <input type="submit" value="Logon" />
+    </form>
+
+
+
+
+    <aside id="offers">
+        <p>...</p>
+    </aside>
+
+    <aside id="XMLOffers">
+        <p>...</p>
+    </aside>
+</main>
+
+<script type="text/javascript">
+    "use strict";
+
+    window.addEventListener("load",function(event) {
+
+        function get_offers(url, elem_id) {
+            var xmlRequest = new XMLHttpRequest();
+            xmlRequest.onreadystatechange = function() {
+                if (this.readyState === 4 && this.status === 200) {
+                    let html = "<p>Current offers:</p>\n" + xmlRequest.responseText;
+                    document.getElementById(elem_id).innerHTML = html;
+                }
+            };
+            xmlRequest.open("GET", url, true);
+            xmlRequest.send();
+        }
+
+        function get_XML_offers(url, elem_id) {
+            var xmlRequest = new XMLHttpRequest();
+            xmlRequest.onreadystatechange = function() {
+                if (this.readyState === 4 && this.status === 200) {
+                    let  xmlReq = xmlRequest.responseText;
+
+                    let xml = new DOMParser().parseFromString(xmlReq, "text/xml");
+                    let title = xml.getElementsByTagName('recordTitle')[0].childNodes[0].nodeValue;
+                    let category = xml.getElementsByTagName('catDesc')[0].childNodes[0].nodeValue;
+                    let price = xml.getElementsByTagName('recordPrice')[0].childNodes[0].nodeValue;
+                    let html = "<p>Current offers:</p>\n<br>\n<p>\n\"" + title +
+                        "\"\n<br>\n<span class='category'>Category: " + category +
+                        "</span>\n<br><span class='price'>Price: " + price +
+                        "</span>\n</p>";
+                    document.getElementById(elem_id).innerHTML = html;
+                }
+            };
+            xmlRequest.open("GET", url, true);
+            xmlRequest.send();
+        }
+
+        get_offers('getOffers.php', 'offers');
+        get_XML_offers('getOffers.php?useXML', 'XMLoffers');
+
+        window.setInterval(function() {
+            get_offers('getOffers.php', 'offers');
+            get_XML_offers('getOffers.php?useXML', 'XMLoffers');
+        }, 5000);
+    });
+
+</script>
+
+
+
+
+
+
+</body>
+</html>
