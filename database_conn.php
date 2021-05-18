@@ -4,7 +4,7 @@
 function getConnection() {
     try {
         $connection = new PDO("mysql:host=localhost;dbname=unn_w17004799",
-            "unn_w17004799", "Telec980");
+            "domainname", "password");
         $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         return $connection;
     } catch (Exception $e) {
